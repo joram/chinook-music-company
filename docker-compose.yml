@@ -52,7 +52,8 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: ${REACT_APP_API_URL:-http://localhost:8000}
     ports:
       - "3002:80"
-
     restart: unless-stopped
