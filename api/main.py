@@ -10,8 +10,8 @@ app = FastAPI(title="Chinook Music API", version="1.0.0")
 # Note: allow_origins=["*"] cannot be used with allow_credentials=True
 # So we either use wildcard without credentials, or specific origins with credentials
 import os
-cors_origins = os.getenv("CORS_ORIGINS", "*").split(",")
-if cors_origins == ["*"]:
+cors_origins_env = os.getenv("CORS_ORIGINS", "*")
+if cors_origins_env == "*":
     # Wildcard origin - cannot use credentials
     app.add_middleware(
         CORSMiddleware,
@@ -22,6 +22,7 @@ if cors_origins == ["*"]:
     )
 else:
     # Specific origins - can use credentials
+    cors_origins = [origin.strip() for origin in cors_origins_env.split(",")]
     app.add_middleware(
         CORSMiddleware,
         allow_origins=cors_origins,
