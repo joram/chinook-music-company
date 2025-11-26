@@ -15,8 +15,8 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U user -d chinook -h localhost -p 5432" ]
 
-  veilstream-postgres-proxy:
-    container_name: veilstream-postgres-proxy
+  proxy:
+    container_name: proxy
     image: veilstream/veilstream-postgres-proxy:latest
     env_file: ./.env
     environment:
@@ -43,6 +43,8 @@ services:
     depends_on:
       source-database:
         condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8000/api/artists || exit 1" ]
     restart: unless-stopped
 
   app:
@@ -55,5 +57,7 @@ services:
     ports:
       - "3002:80"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
+
     restart: unless-stopped
