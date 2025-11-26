@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import artists, albums, tracks, customers, invoices, employees, genres, playlists
@@ -25,11 +26,31 @@ app.include_router(genres.router)
 app.include_router(playlists.router)
 
 
+async def wait_for_database(max_retries=None, delay=None):
+    """Wait for database to be ready with retry logic"""
+    import os
+    max_retries = max_retries or int(os.getenv("DB_MAX_RETRIES", "30"))
+    delay = delay or float(os.getenv("DB_RETRY_DELAY", "2.0"))
+    
+    for attempt in range(max_retries):
+        try:
+            async with database.engine.begin() as conn:
+                await conn.run_sync(database.Base.metadata.reflect)
+            print("Database connection successful!")
+            return
+        except Exception as e:
+            if attempt < max_retries - 1:
+                print(f"Database not ready yet (attempt {attempt + 1}/{max_retries}): {e}")
+                await asyncio.sleep(delay)
+            else:
+                print(f"Failed to connect to database after {max_retries} attempts: {e}")
+                raise
+
+
 @app.on_event("startup")
 async def startup():
-    # Reflect database tables
-    async with database.engine.begin() as conn:
-        await conn.run_sync(database.Base.metadata.reflect)
+    # Wait for database to be ready and reflect tables
+    await wait_for_database()
 
 
 @app.get("/")

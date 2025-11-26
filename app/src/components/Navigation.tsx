@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
+  Box,
   Drawer,
   List,
   ListItem,
@@ -41,9 +42,51 @@ export const Navigation: React.FC = () => {
       }}
     >
       <Toolbar>
-        <Typography variant="h6" noWrap component="div">
-          Chinook Music
-        </Typography>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', py: 2 }}>
+          <Box
+            component="svg"
+            viewBox="0 0 100 100"
+            sx={{
+              width: 120,
+              height: 120,
+              mb: 2,
+            }}
+          >
+            {/* Outer record circle */}
+            <circle
+              cx="50"
+              cy="50"
+              r="45"
+              fill="#1976d2"
+              stroke="#fff"
+              strokeWidth="2"
+            />
+            {/* Inner grooves */}
+            <circle cx="50" cy="50" r="35" fill="none" stroke="#fff" strokeWidth="1" opacity="0.3" />
+            <circle cx="50" cy="50" r="25" fill="none" stroke="#fff" strokeWidth="1" opacity="0.3" />
+            <circle cx="50" cy="50" r="15" fill="none" stroke="#fff" strokeWidth="1" opacity="0.3" />
+            {/* Center hole */}
+            <circle cx="50" cy="50" r="5" fill="#fff" />
+            {/* Music notes */}
+            <g transform="translate(50, 50)">
+              {/* First note */}
+              <g transform="translate(-20, -10)">
+                <ellipse cx="0" cy="0" rx="3" ry="5" fill="#fff" />
+                <line x1="3" y1="0" x2="3" y2="-15" stroke="#fff" strokeWidth="2" />
+                <circle cx="8" cy="-12" r="2" fill="#fff" />
+              </g>
+              {/* Second note */}
+              <g transform="translate(15, -5)">
+                <ellipse cx="0" cy="0" rx="3" ry="5" fill="#fff" />
+                <line x1="3" y1="0" x2="3" y2="-15" stroke="#fff" strokeWidth="2" />
+                <circle cx="8" cy="-12" r="2" fill="#fff" />
+              </g>
+            </g>
+          </Box>
+          <Typography variant="h6" noWrap component="div" sx={{ color: 'text.primary' }}>
+            Chinook Music
+          </Typography>
+        </Box>
       </Toolbar>
       <List>
         {menuItems.map((item) => (
