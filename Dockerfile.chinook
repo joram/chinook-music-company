@@ -1,4 +1,4 @@
-FROM postgres:16-alpine
+FROM postgres:18-alpine
 
 # Copy custom entrypoint script
 COPY docker-entrypoint-chinook.sh /usr/local/bin/
