@@ -9,11 +9,10 @@ import { AlbumDetailPage } from './pages/AlbumDetailPage';
 import { EnvVarsPage } from './pages/EnvVarsPage';
 import { CustomersPage } from './pages/CustomersPage';
 import { EmployeesPage } from './pages/EmployeesPage';
-import { createAppTheme, defaultTheme } from './theme';
+import { createAppTheme, darkTheme } from './theme';
 
-// Create theme from configuration
-// In the future, this could be selected dynamically (e.g., from user preferences, URL param, etc.)
-const theme = createAppTheme(defaultTheme);
+// Create theme from configuration - using dark theme for dark mode branch
+const theme = createAppTheme(darkTheme);
 
 function App() {
   return (
