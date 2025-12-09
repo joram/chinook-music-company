@@ -24,7 +24,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "NODE_OPTIONS='--max-old-space-size=4096' tsc && NODE_OPTIONS='--max-old-space-size=4096' vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview"
   }
 }
