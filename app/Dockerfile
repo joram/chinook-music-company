@@ -5,6 +5,9 @@ FROM node:25-alpine as build
 ARG VITE_API_URL=http://localhost:8000
 ENV VITE_API_URL=$VITE_API_URL
 
+# Set Node.js memory limit to prevent OOM kills
+ENV NODE_OPTIONS=--max-old-space-size=4096
+
 WORKDIR /app
 
 COPY package*.json ./

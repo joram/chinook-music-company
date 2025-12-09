@@ -10,8 +10,11 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
+    // Disable source maps to reduce memory usage during build
+    sourcemap: false,
     // Optimize build to reduce memory usage
     chunkSizeWarningLimit: 1000,
+    minify: 'esbuild', // Use esbuild for faster, lower-memory minification
     rollupOptions: {
       output: {
         manualChunks: {
