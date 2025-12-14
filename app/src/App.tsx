@@ -9,6 +9,7 @@ import { AlbumDetailPage } from './pages/AlbumDetailPage';
 import { EnvVarsPage } from './pages/EnvVarsPage';
 import { CustomersPage } from './pages/CustomersPage';
 import { CustomerDetailPage } from './pages/CustomerDetailPage';
+import { InvoiceDetailPage } from './pages/InvoiceDetailPage';
 import { EmployeesPage } from './pages/EmployeesPage';
 import { createAppTheme, defaultTheme } from './theme';
 
@@ -40,6 +41,7 @@ function App() {
                 <Route path="/envvars" element={<EnvVarsPage />} />
                 <Route path="/customers" element={<CustomersPage />} />
                 <Route path="/customers/:id" element={<CustomerDetailPage />} />
+                <Route path="/invoices/:id" element={<InvoiceDetailPage />} />
                 <Route path="/employees" element={<EmployeesPage />} />
               </Routes>
             </Container>

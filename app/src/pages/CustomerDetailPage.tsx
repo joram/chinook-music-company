@@ -167,6 +167,7 @@ export const CustomerDetailPage: React.FC = () => {
         title=""
         columns={invoiceColumns}
         data={invoices.map((i) => ({ ...i, id: i.invoice_id }))}
+        onRowClick={(invoiceId) => navigate(`/invoices/${invoiceId}`)}
       />
     </Box>
   );
