@@ -8,6 +8,7 @@ import { ArtistDetailPage } from './pages/ArtistDetailPage';
 import { AlbumDetailPage } from './pages/AlbumDetailPage';
 import { EnvVarsPage } from './pages/EnvVarsPage';
 import { CustomersPage } from './pages/CustomersPage';
+import { CustomerDetailPage } from './pages/CustomerDetailPage';
 import { EmployeesPage } from './pages/EmployeesPage';
 import { createAppTheme, defaultTheme } from './theme';
 
@@ -38,6 +39,7 @@ function App() {
                 <Route path="/artists/:id/albums/:albumId" element={<AlbumDetailPage />} />
                 <Route path="/envvars" element={<EnvVarsPage />} />
                 <Route path="/customers" element={<CustomersPage />} />
+                <Route path="/customers/:id" element={<CustomerDetailPage />} />
                 <Route path="/employees" element={<EmployeesPage />} />
               </Routes>
             </Container>
