@@ -1,13 +1,13 @@
 
 services:
 
-  source-database:
-    container_name: source-database
+  database:
+    container_name: database
     build:
-      context: .
-      dockerfile: Dockerfile.chinook
+      context: ./database
+      dockerfile: Dockerfile
     environment:
-      POSTGRES_DB: chinook
+      POSTGRES_DB: database
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
     volumes:
@@ -22,14 +22,14 @@ services:
     image: veilstream/veilstream-postgres-proxy:latest
     env_file: ./.env
     environment:
-      DATABASE_URI: postgresql://user:password@source-database:5432/chinook
+      DATABASE_URI: postgresql://user:password@database:5432/database
     volumes:
       - .proxy-data/:/veilstream/
     ports:
       - "5435:5432"
       - "8683:8683"
     depends_on:
-      source-database:
+      database:
         condition: service_healthy
     logging:
       options:
