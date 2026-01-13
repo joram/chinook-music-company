@@ -46,9 +46,6 @@ services:
       DATABASE_URL: postgresql+asyncpg://user:password@database:5432/chinook
     ports:
       - "8000:8000"
-    depends_on:
-      database:
-        condition: service_healthy
     healthcheck:
       test: [ "CMD-SHELL", "curl -f http://localhost:8000/health || exit 1" ]
     restart: unless-stopped
