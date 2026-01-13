@@ -43,7 +43,7 @@ services:
       context: ./api
       dockerfile: Dockerfile
     environment:
-      DATABASE_URL: postgresql+asyncpg://user:password@database:5432/chinook
+      DATABASE_URL: postgresql+asyncpg://user:password@database:5432/database
     ports:
       - "8000:8000"
     healthcheck:
