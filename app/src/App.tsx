@@ -1,3 +1,4 @@
+import { useState, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,19 +12,27 @@ import { CustomersPage } from './pages/CustomersPage';
 import { CustomerDetailPage } from './pages/CustomerDetailPage';
 import { InvoiceDetailPage } from './pages/InvoiceDetailPage';
 import { EmployeesPage } from './pages/EmployeesPage';
-import { createAppTheme, defaultTheme } from './theme';
-
-// Create theme from configuration
-// In the future, this could be selected dynamically (e.g., from user preferences, URL param, etc.)
-const theme = createAppTheme(defaultTheme);
+import { createAppTheme, defaultTheme, darkTheme } from './theme';
 
 function App() {
+  const [isDark, setIsDark] = useState(() => localStorage.getItem('theme') === 'dark');
+
+  const theme = useMemo(() => createAppTheme(isDark ? darkTheme : defaultTheme), [isDark]);
+
+  const toggleTheme = () => {
+    setIsDark(prev => {
+      const next = !prev;
+      localStorage.setItem('theme', next ? 'dark' : 'light');
+      return next;
+    });
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
         <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-          <Navigation />
+          <Navigation isDark={isDark} onToggleTheme={toggleTheme} />
           <Box
             component="main"
             sx={{
