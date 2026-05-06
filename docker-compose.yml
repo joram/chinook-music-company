@@ -16,27 +16,6 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h localhost -p 5432" ]
 
-
-  proxy:
-    container_name: proxy
-    image: veilstream/veilstream-postgres-proxy:latest
-    env_file: ./.env
-    environment:
-      DATABASE_URI: postgresql://user:password@database:5432/database
-    volumes:
-      - .proxy-data/:/veilstream/
-    ports:
-      - "5435:5432"
-      - "8683:8683"
-    depends_on:
-      database:
-        condition: service_healthy
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "3"
-
-
   api:
     container_name: api
     build:
