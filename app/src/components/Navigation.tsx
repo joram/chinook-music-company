@@ -3,12 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Box,
   Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  ToggleButton,
+  ToggleButtonGroup,
   Toolbar,
   Tooltip,
   Typography,
@@ -25,17 +26,11 @@ import {
 
 type ThemeMode = 'light' | 'dark' | 'gaudi';
 
-const NEXT_MODE_LABEL: Record<ThemeMode, string> = {
-  light: 'Switch to dark mode',
-  dark: 'Switch to Gaudí mode',
-  gaudi: 'Switch to light mode',
-};
-
-const MODE_ICON: Record<ThemeMode, React.ReactNode> = {
-  light: <DarkMode />,
-  dark: <AutoAwesome />,
-  gaudi: <LightMode />,
-};
+const THEME_OPTIONS: { value: ThemeMode; label: string; icon: React.ReactNode }[] = [
+  { value: 'light', label: 'Light mode', icon: <LightMode fontSize="small" /> },
+  { value: 'dark', label: 'Dark mode', icon: <DarkMode fontSize="small" /> },
+  { value: 'gaudi', label: 'Gaudí mode', icon: <AutoAwesome fontSize="small" /> },
+];
 
 const drawerWidth = 240;
 
@@ -47,10 +42,10 @@ const menuItems = [
 
 interface NavigationProps {
   mode: ThemeMode;
-  onCycleTheme: () => void;
+  onSetTheme: (mode: ThemeMode) => void;
 }
 
-export const Navigation: React.FC<NavigationProps> = ({ mode, onCycleTheme }) => {
+export const Navigation: React.FC<NavigationProps> = ({ mode, onSetTheme }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
@@ -132,11 +127,23 @@ export const Navigation: React.FC<NavigationProps> = ({ mode, onCycleTheme }) =>
       </List>
       <Box sx={{ flexGrow: 1 }} />
       <Box sx={{ display: 'flex', justifyContent: 'center', pb: 2 }}>
-        <Tooltip title={NEXT_MODE_LABEL[mode]}>
-          <IconButton onClick={onCycleTheme} color="inherit">
-            {MODE_ICON[mode]}
-          </IconButton>
-        </Tooltip>
+        <ToggleButtonGroup
+          value={mode}
+          exclusive
+          size="small"
+          onChange={(_, next: ThemeMode | null) => {
+            if (next) onSetTheme(next);
+          }}
+          aria-label="theme mode"
+        >
+          {THEME_OPTIONS.map(({ value, label, icon }) => (
+            <Tooltip key={value} title={label}>
+              <ToggleButton value={value} aria-label={label}>
+                {icon}
+              </ToggleButton>
+            </Tooltip>
+          ))}
+        </ToggleButtonGroup>
       </Box>
     </Drawer>
   );

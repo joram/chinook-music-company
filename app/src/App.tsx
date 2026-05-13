@@ -16,8 +16,6 @@ import { createAppTheme, defaultTheme, darkTheme, gaudiTheme } from './theme';
 
 type ThemeMode = 'light' | 'dark' | 'gaudi';
 
-const THEME_CYCLE: ThemeMode[] = ['light', 'dark', 'gaudi'];
-
 const isThemeMode = (value: string | null): value is ThemeMode =>
   value === 'light' || value === 'dark' || value === 'gaudi';
 
@@ -36,12 +34,9 @@ function App() {
     document.body.classList.toggle('gaudi-mode', mode === 'gaudi');
   }, [mode]);
 
-  const cycleTheme = () => {
-    setMode(prev => {
-      const next = THEME_CYCLE[(THEME_CYCLE.indexOf(prev) + 1) % THEME_CYCLE.length];
-      localStorage.setItem('theme', next);
-      return next;
-    });
+  const handleSetTheme = (next: ThemeMode) => {
+    setMode(next);
+    localStorage.setItem('theme', next);
   };
 
   return (
@@ -49,7 +44,7 @@ function App() {
       <CssBaseline />
       <Router>
         <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-          <Navigation mode={mode} onCycleTheme={cycleTheme} />
+          <Navigation mode={mode} onSetTheme={handleSetTheme} />
           <Box
             component="main"
             sx={{
