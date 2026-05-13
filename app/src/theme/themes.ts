@@ -66,6 +66,26 @@ export const darkTheme: ThemeConfig = {
   },
 };
 
+// Gaudí mode: maximally loud neon clash — Park Güell on amphetamines
+export const gaudiTheme: ThemeConfig = {
+  name: 'gaudi',
+  mode: 'light',
+  colors: {
+    primary: '#ff00ff',     // hot magenta
+    secondary: '#39ff14',   // electric lime
+    background: '#fff700',  // screaming yellow
+    surface: '#00ffff',     // cyan
+    text: {
+      primary: '#2a004a',   // deep purple — readable on yellow
+      secondary: '#ff0099', // hot pink
+    },
+    error: '#ff003c',
+    warning: '#ff6600',
+    info: '#00ccff',
+    success: '#00ff66',
+  },
+};
+
 // Example: Music-themed color scheme (ready for future use)
 export const musicTheme: ThemeConfig = {
   name: 'music',
@@ -89,7 +109,8 @@ export const musicTheme: ThemeConfig = {
 // Export all available themes
 export const themes: Record<string, ThemeConfig> = {
   default: defaultTheme,
-  dark: defaultTheme,
+  dark: darkTheme,
+  gaudi: gaudiTheme,
   music: musicTheme,
 };
 

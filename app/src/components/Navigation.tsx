@@ -8,15 +8,29 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  ToggleButton,
+  ToggleButtonGroup,
   Toolbar,
+  Tooltip,
   Typography,
   useTheme,
 } from '@mui/material';
 import {
+  DarkMode,
+  LightMode,
+  AutoAwesome,
   MusicNote,
   People,
   Business,
 } from '@mui/icons-material';
+
+type ThemeMode = 'light' | 'dark' | 'gaudi';
+
+const THEME_OPTIONS: { value: ThemeMode; label: string; icon: React.ReactNode }[] = [
+  { value: 'light', label: 'Light mode', icon: <LightMode fontSize="small" /> },
+  { value: 'dark', label: 'Dark mode', icon: <DarkMode fontSize="small" /> },
+  { value: 'gaudi', label: 'Gaudí mode', icon: <AutoAwesome fontSize="small" /> },
+];
 
 const drawerWidth = 240;
 
@@ -26,12 +40,16 @@ const menuItems = [
   { text: 'Employees', icon: <Business />, path: '/employees' },
 ];
 
-export const Navigation: React.FC = () => {
+interface NavigationProps {
+  mode: ThemeMode;
+  onSetTheme: (mode: ThemeMode) => void;
+}
+
+export const Navigation: React.FC<NavigationProps> = ({ mode, onSetTheme }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
 
-  // Get colors from theme
   const primaryColor = theme.palette.primary.main;
   const contrastText = theme.palette.primary.contrastText || '#fff';
 
@@ -107,7 +125,26 @@ export const Navigation: React.FC = () => {
           </ListItem>
         ))}
       </List>
+      <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ display: 'flex', justifyContent: 'center', pb: 2 }}>
+        <ToggleButtonGroup
+          value={mode}
+          exclusive
+          size="small"
+          onChange={(_, next: ThemeMode | null) => {
+            if (next) onSetTheme(next);
+          }}
+          aria-label="theme mode"
+        >
+          {THEME_OPTIONS.map(({ value, label, icon }) => (
+            <Tooltip key={value} title={label}>
+              <ToggleButton value={value} aria-label={label}>
+                {icon}
+              </ToggleButton>
+            </Tooltip>
+          ))}
+        </ToggleButtonGroup>
+      </Box>
     </Drawer>
   );
 };
-

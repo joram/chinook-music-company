@@ -1,3 +1,4 @@
+import { useState, useMemo, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,19 +12,39 @@ import { CustomersPage } from './pages/CustomersPage';
 import { CustomerDetailPage } from './pages/CustomerDetailPage';
 import { InvoiceDetailPage } from './pages/InvoiceDetailPage';
 import { EmployeesPage } from './pages/EmployeesPage';
-import { createAppTheme, defaultTheme } from './theme';
+import { createAppTheme, defaultTheme, darkTheme, gaudiTheme } from './theme';
 
-// Create theme from configuration
-// In the future, this could be selected dynamically (e.g., from user preferences, URL param, etc.)
-const theme = createAppTheme(defaultTheme);
+type ThemeMode = 'light' | 'dark' | 'gaudi';
+
+const isThemeMode = (value: string | null): value is ThemeMode =>
+  value === 'light' || value === 'dark' || value === 'gaudi';
 
 function App() {
+  const [mode, setMode] = useState<ThemeMode>(() => {
+    const stored = localStorage.getItem('theme');
+    return isThemeMode(stored) ? stored : 'light';
+  });
+
+  const theme = useMemo(() => {
+    const config = mode === 'dark' ? darkTheme : mode === 'gaudi' ? gaudiTheme : defaultTheme;
+    return createAppTheme(config);
+  }, [mode]);
+
+  useEffect(() => {
+    document.body.classList.toggle('gaudi-mode', mode === 'gaudi');
+  }, [mode]);
+
+  const handleSetTheme = (next: ThemeMode) => {
+    setMode(next);
+    localStorage.setItem('theme', next);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
         <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-          <Navigation />
+          <Navigation mode={mode} onSetTheme={handleSetTheme} />
           <Box
             component="main"
             sx={{
