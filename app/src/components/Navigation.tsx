@@ -3,16 +3,20 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Box,
   Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Toolbar,
+  Tooltip,
   Typography,
   useTheme,
 } from '@mui/material';
 import {
+  DarkMode,
+  LightMode,
   MusicNote,
   People,
   Business,
@@ -26,12 +30,16 @@ const menuItems = [
   { text: 'Employees', icon: <Business />, path: '/employees' },
 ];
 
-export const Navigation: React.FC = () => {
+interface NavigationProps {
+  isDark: boolean;
+  onToggleTheme: () => void;
+}
+
+export const Navigation: React.FC<NavigationProps> = ({ isDark, onToggleTheme }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
 
-  // Get colors from theme
   const primaryColor = theme.palette.primary.main;
   const contrastText = theme.palette.primary.contrastText || '#fff';
 
@@ -107,7 +115,14 @@ export const Navigation: React.FC = () => {
           </ListItem>
         ))}
       </List>
+      <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ display: 'flex', justifyContent: 'center', pb: 2 }}>
+        <Tooltip title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}>
+          <IconButton onClick={onToggleTheme} color="inherit">
+            {isDark ? <LightMode /> : <DarkMode />}
+          </IconButton>
+        </Tooltip>
+      </Box>
     </Drawer>
   );
 };
-
