@@ -7,6 +7,13 @@ DATABASE_URL = os.getenv(
     "postgresql+asyncpg://user:password@source-database:5432/chinook"
 )
 
+# create_async_engine requires the asyncpg driver; bare "postgresql://" URLs
+# (e.g. from RDS) default to psycopg2, which we don't install.
+if DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+elif DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+
 engine = create_async_engine(
     DATABASE_URL,
     echo=False,
