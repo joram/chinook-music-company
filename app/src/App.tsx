@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -30,6 +30,10 @@ function App() {
   const theme = useMemo(() => {
     const config = mode === 'dark' ? darkTheme : mode === 'gaudi' ? gaudiTheme : defaultTheme;
     return createAppTheme(config);
+  }, [mode]);
+
+  useEffect(() => {
+    document.body.classList.toggle('gaudi-mode', mode === 'gaudi');
   }, [mode]);
 
   const cycleTheme = () => {

@@ -66,23 +66,23 @@ export const darkTheme: ThemeConfig = {
   },
 };
 
-// Gaudí-inspired theme: vibrant mosaic colors from Park Güell and Sagrada Família
+// Gaudí mode: maximally loud neon clash — Park Güell on amphetamines
 export const gaudiTheme: ThemeConfig = {
   name: 'gaudi',
   mode: 'light',
   colors: {
-    primary: '#e8743b',
-    secondary: '#2a9d8f',
-    background: '#fff5e6',
-    surface: '#ffe8c7',
+    primary: '#ff00ff',     // hot magenta
+    secondary: '#39ff14',   // electric lime
+    background: '#fff700',  // screaming yellow
+    surface: '#00ffff',     // cyan
     text: {
-      primary: '#3d1f0f',
-      secondary: '#7a4a2a',
+      primary: '#2a004a',   // deep purple — readable on yellow
+      secondary: '#ff0099', // hot pink
     },
-    error: '#c1272d',
-    warning: '#f1a208',
-    info: '#1d7874',
-    success: '#52b788',
+    error: '#ff003c',
+    warning: '#ff6600',
+    info: '#00ccff',
+    success: '#00ff66',
   },
 };
 

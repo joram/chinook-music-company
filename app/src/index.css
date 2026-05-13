@@ -12,3 +12,108 @@ code {
     monospace;
 }
 
+/* ============================================================ */
+/*  GAUDÍ MODE — abandon all restraint                          */
+/* ============================================================ */
+
+@keyframes gaudi-rainbow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes gaudi-pulse {
+  0%, 100% { transform: scale(1); filter: hue-rotate(0deg); }
+  50%      { transform: scale(1.04); filter: hue-rotate(45deg); }
+}
+
+@keyframes gaudi-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes gaudi-flicker {
+  0%, 100% { text-shadow: 0 0 4px #fff, 0 0 10px #ff00ff, 0 0 18px #ff00ff, 0 0 36px #ff0099; }
+  50%      { text-shadow: 0 0 6px #fff, 0 0 14px #39ff14, 0 0 28px #00ffff, 0 0 48px #ff00ff; }
+}
+
+body.gaudi-mode {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Pacifico', cursive !important;
+  background: linear-gradient(
+    45deg,
+    #ff00ff, #00ffff, #fff700, #39ff14, #ff0099, #ff6600, #ff00ff
+  ) !important;
+  background-size: 400% 400% !important;
+  animation: gaudi-rainbow 6s ease infinite !important;
+}
+
+body.gaudi-mode::before {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  background: conic-gradient(
+    from 0deg,
+    #ff00ff, #00ffff, #fff700, #39ff14, #ff0099, #ff6600, #ff00ff
+  );
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: -1;
+  animation: gaudi-spin 24s linear infinite;
+}
+
+body.gaudi-mode .MuiDrawer-paper,
+body.gaudi-mode main {
+  background: transparent !important;
+}
+
+body.gaudi-mode .MuiPaper-root {
+  background: rgba(255, 247, 0, 0.85) !important;
+  border: 3px dashed #39ff14 !important;
+  box-shadow:
+    0 0 20px #ff00ff,
+    inset 0 0 24px #00ffff !important;
+}
+
+body.gaudi-mode .MuiTypography-root,
+body.gaudi-mode h1, body.gaudi-mode h2, body.gaudi-mode h3,
+body.gaudi-mode h4, body.gaudi-mode h5, body.gaudi-mode h6 {
+  animation: gaudi-flicker 2.5s ease-in-out infinite;
+}
+
+body.gaudi-mode .MuiTypography-h1,
+body.gaudi-mode .MuiTypography-h2,
+body.gaudi-mode .MuiTypography-h3,
+body.gaudi-mode .MuiTypography-h4 {
+  background: linear-gradient(90deg, #ff00ff, #39ff14, #00ffff, #fff700, #ff0099) !important;
+  background-size: 200% 100% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  animation: gaudi-rainbow 3s linear infinite, gaudi-flicker 2.5s ease-in-out infinite !important;
+}
+
+body.gaudi-mode .MuiButton-root,
+body.gaudi-mode .MuiIconButton-root {
+  background: linear-gradient(45deg, #ff00ff, #00ffff, #39ff14) !important;
+  background-size: 200% 200% !important;
+  color: #2a004a !important;
+  border: 2px solid #fff700 !important;
+  box-shadow: 0 0 12px #ff00ff !important;
+  animation: gaudi-rainbow 4s ease infinite !important;
+}
+
+body.gaudi-mode .MuiListItemButton-root.Mui-selected {
+  background: linear-gradient(45deg, #fff700, #ff0099, #00ffff) !important;
+  background-size: 200% 200% !important;
+  animation: gaudi-rainbow 3s ease infinite, gaudi-pulse 1.6s ease-in-out infinite !important;
+}
+
+body.gaudi-mode .MuiTableCell-root {
+  border-bottom: 2px dotted #ff00ff !important;
+}
+
+body.gaudi-mode .MuiTableRow-root:hover {
+  background: linear-gradient(90deg, #fff700, #00ffff) !important;
+  animation: gaudi-rainbow 2s ease infinite !important;
+}
+
+
