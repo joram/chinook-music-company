@@ -66,6 +66,26 @@ export const darkTheme: ThemeConfig = {
   },
 };
 
+// Gaudí-inspired theme: vibrant mosaic colors from Park Güell and Sagrada Família
+export const gaudiTheme: ThemeConfig = {
+  name: 'gaudi',
+  mode: 'light',
+  colors: {
+    primary: '#e8743b',
+    secondary: '#2a9d8f',
+    background: '#fff5e6',
+    surface: '#ffe8c7',
+    text: {
+      primary: '#3d1f0f',
+      secondary: '#7a4a2a',
+    },
+    error: '#c1272d',
+    warning: '#f1a208',
+    info: '#1d7874',
+    success: '#52b788',
+  },
+};
+
 // Example: Music-themed color scheme (ready for future use)
 export const musicTheme: ThemeConfig = {
   name: 'music',
@@ -90,6 +110,7 @@ export const musicTheme: ThemeConfig = {
 export const themes: Record<string, ThemeConfig> = {
   default: defaultTheme,
   dark: darkTheme,
+  gaudi: gaudiTheme,
   music: musicTheme,
 };
 

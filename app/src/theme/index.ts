@@ -1,5 +1,5 @@
 export { createAppTheme } from './createTheme';
-export { defaultTheme, darkTheme, musicTheme, themes } from './themes';
+export { defaultTheme, darkTheme, gaudiTheme, musicTheme, themes } from './themes';
 export type { ThemeConfig, ThemeColors } from './types';
 
 import { defaultTheme, themes } from './themes';

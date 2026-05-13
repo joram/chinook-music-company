@@ -17,10 +17,25 @@ import {
 import {
   DarkMode,
   LightMode,
+  AutoAwesome,
   MusicNote,
   People,
   Business,
 } from '@mui/icons-material';
+
+type ThemeMode = 'light' | 'dark' | 'gaudi';
+
+const NEXT_MODE_LABEL: Record<ThemeMode, string> = {
+  light: 'Switch to dark mode',
+  dark: 'Switch to Gaudí mode',
+  gaudi: 'Switch to light mode',
+};
+
+const MODE_ICON: Record<ThemeMode, React.ReactNode> = {
+  light: <DarkMode />,
+  dark: <AutoAwesome />,
+  gaudi: <LightMode />,
+};
 
 const drawerWidth = 240;
 
@@ -31,11 +46,11 @@ const menuItems = [
 ];
 
 interface NavigationProps {
-  isDark: boolean;
-  onToggleTheme: () => void;
+  mode: ThemeMode;
+  onCycleTheme: () => void;
 }
 
-export const Navigation: React.FC<NavigationProps> = ({ isDark, onToggleTheme }) => {
+export const Navigation: React.FC<NavigationProps> = ({ mode, onCycleTheme }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
@@ -117,9 +132,9 @@ export const Navigation: React.FC<NavigationProps> = ({ isDark, onToggleTheme })
       </List>
       <Box sx={{ flexGrow: 1 }} />
       <Box sx={{ display: 'flex', justifyContent: 'center', pb: 2 }}>
-        <Tooltip title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}>
-          <IconButton onClick={onToggleTheme} color="inherit">
-            {isDark ? <LightMode /> : <DarkMode />}
+        <Tooltip title={NEXT_MODE_LABEL[mode]}>
+          <IconButton onClick={onCycleTheme} color="inherit">
+            {MODE_ICON[mode]}
           </IconButton>
         </Tooltip>
       </Box>

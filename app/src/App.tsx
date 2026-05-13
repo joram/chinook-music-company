@@ -12,17 +12,30 @@ import { CustomersPage } from './pages/CustomersPage';
 import { CustomerDetailPage } from './pages/CustomerDetailPage';
 import { InvoiceDetailPage } from './pages/InvoiceDetailPage';
 import { EmployeesPage } from './pages/EmployeesPage';
-import { createAppTheme, defaultTheme, darkTheme } from './theme';
+import { createAppTheme, defaultTheme, darkTheme, gaudiTheme } from './theme';
+
+type ThemeMode = 'light' | 'dark' | 'gaudi';
+
+const THEME_CYCLE: ThemeMode[] = ['light', 'dark', 'gaudi'];
+
+const isThemeMode = (value: string | null): value is ThemeMode =>
+  value === 'light' || value === 'dark' || value === 'gaudi';
 
 function App() {
-  const [isDark, setIsDark] = useState(() => localStorage.getItem('theme') === 'dark');
+  const [mode, setMode] = useState<ThemeMode>(() => {
+    const stored = localStorage.getItem('theme');
+    return isThemeMode(stored) ? stored : 'light';
+  });
 
-  const theme = useMemo(() => createAppTheme(isDark ? darkTheme : defaultTheme), [isDark]);
+  const theme = useMemo(() => {
+    const config = mode === 'dark' ? darkTheme : mode === 'gaudi' ? gaudiTheme : defaultTheme;
+    return createAppTheme(config);
+  }, [mode]);
 
-  const toggleTheme = () => {
-    setIsDark(prev => {
-      const next = !prev;
-      localStorage.setItem('theme', next ? 'dark' : 'light');
+  const cycleTheme = () => {
+    setMode(prev => {
+      const next = THEME_CYCLE[(THEME_CYCLE.indexOf(prev) + 1) % THEME_CYCLE.length];
+      localStorage.setItem('theme', next);
       return next;
     });
   };
@@ -32,7 +45,7 @@ function App() {
       <CssBaseline />
       <Router>
         <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-          <Navigation isDark={isDark} onToggleTheme={toggleTheme} />
+          <Navigation mode={mode} onCycleTheme={cycleTheme} />
           <Box
             component="main"
             sx={{
