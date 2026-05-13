@@ -89,7 +89,7 @@ export const musicTheme: ThemeConfig = {
 // Export all available themes
 export const themes: Record<string, ThemeConfig> = {
   default: defaultTheme,
-  dark: defaultTheme,
+  dark: darkTheme,
   music: musicTheme,
 };
 
