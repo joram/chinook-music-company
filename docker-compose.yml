@@ -21,8 +21,8 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    environment:
-      DATABASE_URL: postgresql+asyncpg://user:password@database:5432/database
+    env_file:
+      - ./api/.env
     ports:
       - "8000:8000"
     healthcheck:

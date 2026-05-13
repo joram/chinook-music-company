@@ -1,3 +1,4 @@
 /.env
+api/.env
 .idea
 .proxy-data/
