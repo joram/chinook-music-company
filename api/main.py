@@ -1,6 +1,8 @@
 import asyncio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from sqlalchemy import text
 from routers import artists, albums, tracks, customers, invoices, employees, genres, playlists, envvars
 import database
 
@@ -146,14 +148,10 @@ async def wait_for_database(max_retries=None, delay=None):
 
 @app.on_event("startup")
 async def startup():
-    # Wait for database to be ready and reflect tables
-    # Don't fail startup if tables aren't found - allow app to start and handle errors in routes
-    try:
-        await wait_for_database()
-    except Exception as e:
-        print(f"WARNING: Database initialization failed: {e}")
-        print("WARNING: Application will start but API endpoints may fail until database is initialized.")
-        print("WARNING: Ensure database initialization scripts are mounted and run on first startup.")
+    # Wait for the database and reflect its tables. If it never becomes
+    # reachable, let the exception stop the process so the container exits
+    # and gets restarted, rather than serving requests that can only fail.
+    await wait_for_database()
 
 
 @app.get("/")
@@ -163,5 +161,11 @@ async def root():
 
 @app.get("/health")
 async def health():
+    try:
+        async with database.engine.connect() as conn:
+            await conn.execute(text("SELECT 1"))
+    except Exception as e:
+        print(f"Health check failed: {e}")
+        return JSONResponse(status_code=503, content={"status": "unhealthy"})
     return {"status": "healthy"}
 
