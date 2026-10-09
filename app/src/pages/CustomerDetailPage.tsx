@@ -3,17 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { EntityList } from '../components/EntityList';
 import { customersApi, invoicesApi } from '../services/api';
 import { Customer, Invoice } from '../types';
-import {
-  Box,
-  CircularProgress,
-  Typography,
-  Breadcrumbs,
-  Link,
-  Paper,
-  Grid,
-  Divider,
-} from '@mui/material';
-import { Home, People } from '@mui/icons-material';
+import { DetailPanel, PageHeader, StatStrip, formatCurrency, formatDate } from '../components/PageHeader';
+import { Box, CircularProgress, Typography, Grid } from '@mui/material';
 
 export const CustomerDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -57,26 +48,19 @@ export const CustomerDetailPage: React.FC = () => {
     );
   }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  };
-
-  const formatCurrency = (value: number | string) => {
-    return `$${Number(value).toFixed(2)}`;
-  };
-
   const totalSpent = invoices.reduce((sum, invoice) => sum + Number(invoice.total), 0);
+  const fullName = `${customer.first_name} ${customer.last_name}`;
 
   const invoiceColumns = [
-    { id: 'invoice_id', label: 'Invoice ID', minWidth: 100 },
+    { id: 'invoice_id', label: 'Invoice', minWidth: 90, format: (value: number) => `#${value}` },
     {
       id: 'invoice_date',
       label: 'Date',
       minWidth: 120,
       format: (value: string) => formatDate(value),
     },
-    { id: 'billing_city', label: 'Billing City', minWidth: 150 },
-    { id: 'billing_country', label: 'Billing Country', minWidth: 120 },
+    { id: 'billing_city', label: 'Billing city', minWidth: 150 },
+    { id: 'billing_country', label: 'Billing country', minWidth: 120 },
     {
       id: 'total',
       label: 'Total',
@@ -86,90 +70,60 @@ export const CustomerDetailPage: React.FC = () => {
     },
   ];
 
+  const cityLine = [customer.city, customer.state].filter(Boolean).join(', ');
+  const countryLine = [customer.country, customer.postal_code].filter(Boolean).join(' ');
+
   return (
     <Box>
-      <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
-        <Link
-          color="inherit"
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            navigate('/customers');
-          }}
-          sx={{ display: 'flex', alignItems: 'center' }}
-        >
-          <Home sx={{ mr: 0.5 }} fontSize="inherit" />
-          Customers
-        </Link>
-        <Typography color="text.primary" sx={{ display: 'flex', alignItems: 'center' }}>
-          <People sx={{ mr: 0.5 }} fontSize="inherit" />
-          {customer.first_name} {customer.last_name}
-        </Typography>
-      </Breadcrumbs>
+      <PageHeader
+        title={fullName}
+        subtitle={customer.company || undefined}
+        crumbs={[{ label: 'Customers', to: '/customers' }, { label: fullName }]}
+        actions={
+          <StatStrip
+            stats={[
+              { label: 'Invoices', value: invoices.length },
+              { label: 'Total spent', value: formatCurrency(totalSpent) },
+            ]}
+          />
+        }
+      />
 
-      <Typography variant="h4" component="h1" gutterBottom>
-        {customer.first_name} {customer.last_name}
-      </Typography>
-
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Grid container spacing={2} sx={{ mb: 4 }}>
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Contact Information
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-            <Typography variant="body2" color="text.secondary">
-              <strong>Email:</strong> {customer.email || 'N/A'}
-            </Typography>
-            {customer.phone && (
-              <Typography variant="body2" color="text.secondary">
-                <strong>Phone:</strong> {customer.phone}
-              </Typography>
-            )}
-            {customer.company && (
-              <Typography variant="body2" color="text.secondary">
-                <strong>Company:</strong> {customer.company}
-              </Typography>
-            )}
-          </Paper>
+          <DetailPanel
+            title="Contact"
+            rows={[
+              { label: 'Email', value: customer.email },
+              { label: 'Phone', value: customer.phone },
+              { label: 'Fax', value: customer.fax },
+              { label: 'Support rep', value: customer.support_rep && `${customer.support_rep.first_name} ${customer.support_rep.last_name}` },
+            ]}
+          />
         </Grid>
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Address
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-            <Typography variant="body2" color="text.secondary">
-              {customer.address || 'N/A'}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {customer.city && customer.state
-                ? `${customer.city}, ${customer.state}`
-                : customer.city || customer.state || ''}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {customer.country || ''} {customer.postal_code || ''}
-            </Typography>
-          </Paper>
+          <DetailPanel
+            title="Address"
+            rows={[
+              { label: 'Street', value: customer.address },
+              { label: 'City', value: cityLine },
+              { label: 'Country', value: countryLine },
+            ]}
+          />
         </Grid>
       </Grid>
 
-      <Box sx={{ mb: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          Purchase History
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          Total Invoices: {invoices.length} | Total Spent: {formatCurrency(totalSpent)}
-        </Typography>
-      </Box>
-
+      <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
+        Purchase history
+      </Typography>
       <EntityList
-        title=""
         columns={invoiceColumns}
         data={invoices.map((i) => ({ ...i, id: i.invoice_id }))}
         onRowClick={(invoiceId) => navigate(`/invoices/${invoiceId}`)}
+        defaultSort={{ column: 'invoice_date', direction: 'desc' }}
+        searchable={false}
+        emptyMessage="This customer hasn't made any purchases."
       />
     </Box>
   );
 };
-

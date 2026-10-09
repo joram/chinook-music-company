@@ -3,8 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { EntityList } from '../components/EntityList';
 import { artistsApi, albumsApi } from '../services/api';
 import { Artist, Album } from '../types';
-import { Box, CircularProgress, Typography, Breadcrumbs, Link } from '@mui/material';
-import { Home, MusicNote } from '@mui/icons-material';
+import { PageHeader } from '../components/PageHeader';
+import { Box, CircularProgress, Typography } from '@mui/material';
 
 export const ArtistDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -49,43 +49,27 @@ export const ArtistDetailPage: React.FC = () => {
   }
 
   const columns = [
-    { id: 'album_id', label: 'ID', minWidth: 50 },
-    { id: 'title', label: 'Album Title', minWidth: 250 },
+    { id: 'title', label: 'Album', minWidth: 250 },
+    { id: 'album_id', label: 'ID', minWidth: 50, width: 80, align: 'right' as const },
   ];
+
+  const name = artist.name || 'Unknown artist';
 
   return (
     <Box>
-      <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
-        <Link
-          color="inherit"
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            navigate('/artists');
-          }}
-          sx={{ display: 'flex', alignItems: 'center' }}
-        >
-          <Home sx={{ mr: 0.5 }} fontSize="inherit" />
-          Artists
-        </Link>
-        <Typography color="text.primary" sx={{ display: 'flex', alignItems: 'center' }}>
-          <MusicNote sx={{ mr: 0.5 }} fontSize="inherit" />
-          {artist.name || 'Unknown Artist'}
-        </Typography>
-      </Breadcrumbs>
-      <Typography variant="h4" component="h1" gutterBottom>
-        {artist.name || 'Unknown Artist'}
-      </Typography>
-      <Typography variant="subtitle1" color="text.secondary" gutterBottom sx={{ mb: 3 }}>
-        Albums
-      </Typography>
+      <PageHeader
+        title={name}
+        subtitle={`${albums.length} ${albums.length === 1 ? 'album' : 'albums'}`}
+        crumbs={[{ label: 'Artists', to: '/artists' }, { label: name }]}
+      />
       <EntityList
-        title=""
         columns={columns}
         data={albums.map(a => ({ ...a, id: a.album_id }))}
         onRowClick={(albumId) => navigate(`/artists/${id}/albums/${albumId}`)}
+        defaultSort={{ column: 'title', direction: 'asc' }}
+        searchPlaceholder="Search albums"
+        emptyMessage="This artist has no albums in the catalog."
       />
     </Box>
   );
 };
-

@@ -13,7 +13,7 @@ export const ArtistsPage: React.FC = () => {
   useEffect(() => {
     const fetchArtists = async () => {
       try {
-        const data = await artistsApi.getAll();
+        const data = await artistsApi.getAll(0, 1000);
         setArtists(data);
       } catch (error) {
         console.error('Error fetching artists:', error);
@@ -33,16 +33,19 @@ export const ArtistsPage: React.FC = () => {
   }
 
   const columns = [
-    { id: 'artist_id', label: 'ID', minWidth: 50 },
+    { id: 'artist_id', label: 'ID', minWidth: 50, width: 80, align: 'right' as const },
     { id: 'name', label: 'Name', minWidth: 200 },
   ];
 
   return (
     <EntityList
       title="Artists"
+      subtitle="Every artist in the catalog. Select one to see their albums."
       columns={columns}
       data={artists.map(a => ({ ...a, id: a.artist_id }))}
       onRowClick={(id) => navigate(`/artists/${id}`)}
+      defaultSort={{ column: 'name', direction: 'asc' }}
+      searchPlaceholder="Search artists"
     />
   );
 };

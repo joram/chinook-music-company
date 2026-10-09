@@ -31,9 +31,9 @@ export const EmployeesPage: React.FC = () => {
   }
 
   const columns = [
-    { id: 'employee_id', label: 'ID', minWidth: 50 },
-    { id: 'first_name', label: 'First Name', minWidth: 120 },
-    { id: 'last_name', label: 'Last Name', minWidth: 120 },
+    { id: 'employee_id', label: 'ID', minWidth: 50, width: 80, align: 'right' as const },
+    { id: 'first_name', label: 'First name', minWidth: 120 },
+    { id: 'last_name', label: 'Last name', minWidth: 120 },
     { id: 'title', label: 'Title', minWidth: 150 },
     { id: 'email', label: 'Email', minWidth: 200 },
     { id: 'city', label: 'City', minWidth: 100 },
@@ -42,8 +42,11 @@ export const EmployeesPage: React.FC = () => {
   return (
     <EntityList
       title="Employees"
+      subtitle="Staff directory."
       columns={columns}
       data={employees.map(e => ({ ...e, id: e.employee_id }))}
+      defaultSort={{ column: 'last_name', direction: 'asc' }}
+      searchPlaceholder="Search employees"
     />
   );
 };

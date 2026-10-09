@@ -3,6 +3,7 @@ export interface ThemeColors {
   secondary: string;
   background: string;
   surface: string;
+  sidebar?: string;
   text: {
     primary: string;
     secondary: string;

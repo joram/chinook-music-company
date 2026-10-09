@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  CircularProgress,
-  Typography,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Chip,
-} from '@mui/material';
+import { Alert, Box, Chip, CircularProgress, Typography } from '@mui/material';
+import { EntityList } from '../components/EntityList';
+import { PageHeader } from '../components/PageHeader';
 import { envvarsApi } from '../services/api';
 
 export const EnvVarsPage: React.FC = () => {
@@ -54,74 +44,57 @@ export const EnvVarsPage: React.FC = () => {
     );
   }
 
+  const columns = [
+    {
+      id: 'key',
+      label: 'Variable',
+      minWidth: 200,
+      format: (value: string) => (
+        <>
+          <code>{value}</code>
+          {value === 'VITE_API_URL' && <Chip label="Important" color="primary" size="small" sx={{ ml: 1 }} />}
+        </>
+      ),
+    },
+    {
+      id: 'value',
+      label: 'Value',
+      minWidth: 200,
+      format: (value: string) => <code style={{ wordBreak: 'break-all' }}>{value}</code>,
+    },
+  ];
+
   const renderEnvVarTable = (envVars: Record<string, string>, title: string) => (
-    <Box sx={{ mb: 4 }}>
-      <Typography variant="h5" component="h2" gutterBottom>
+    <Box sx={{ mb: 5 }}>
+      <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
         {title}
       </Typography>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell><strong>Variable Name</strong></TableCell>
-              <TableCell><strong>Value</strong></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {Object.keys(envVars).length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={2} align="center">
-                  <Typography color="text.secondary">No environment variables found</Typography>
-                </TableCell>
-              </TableRow>
-            ) : (
-              Object.entries(envVars)
-                .sort(([a], [b]) => a.localeCompare(b))
-                .map(([key, value]) => (
-                  <TableRow key={key}>
-                    <TableCell>
-                      <code>{key}</code>
-                      {key === 'VITE_API_URL' && (
-                        <Chip
-                          label="Important"
-                          color="primary"
-                          size="small"
-                          sx={{ ml: 1 }}
-                        />
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <code style={{ wordBreak: 'break-all' }}>{value}</code>
-                    </TableCell>
-                  </TableRow>
-                ))
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <EntityList
+        columns={columns}
+        data={Object.entries(envVars).map(([key, value]) => ({ id: key, key, value }))}
+        defaultSort={{ column: 'key', direction: 'asc' }}
+        searchPlaceholder="Search variables"
+        emptyMessage="No environment variables found."
+      />
     </Box>
   );
 
   return (
     <Box>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Environment Variables
-      </Typography>
-      <Typography variant="body1" color="text.secondary" paragraph>
-        This page shows environment variables from both the frontend (build-time) and API (runtime) pods.
-        Note: Vite environment variables must be set at <strong>build time</strong> and are baked into the JavaScript bundle.
-      </Typography>
+      <PageHeader
+        title="Environment"
+        subtitle="Variables from the frontend build and the running API. Frontend values are baked in at build time."
+      />
 
       {error && (
-        <Box sx={{ mb: 3, p: 2, bgcolor: 'error.light', borderRadius: 1 }}>
-          <Typography color="error">Error fetching API environment variables: {error}</Typography>
-        </Box>
+        <Alert severity="error" sx={{ mb: 3 }}>
+          Couldn't load API environment variables: {error}
+        </Alert>
       )}
 
-      {renderEnvVarTable(frontendEnvVars, 'Frontend Environment Variables (Build-time)')}
+      {renderEnvVarTable(frontendEnvVars, 'Frontend (build time)')}
 
-      {apiEnvVars && renderEnvVarTable(apiEnvVars, 'API Environment Variables (Runtime)')}
+      {apiEnvVars && renderEnvVarTable(apiEnvVars, 'API (runtime)')}
     </Box>
   );
 };
-

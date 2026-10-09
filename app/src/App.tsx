@@ -1,8 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Box, Container } from '@mui/material';
-import { Navigation } from './components/Navigation';
+import { useState } from 'react';
+import { AppBar, Box, Container, IconButton, Toolbar, Typography } from '@mui/material';
+import { Menu } from '@mui/icons-material';
+import { Navigation, drawerWidth } from './components/Navigation';
 import { ArtistsPage } from './pages/ArtistsPage';
 import { ArtistDetailPage } from './pages/ArtistDetailPage';
 import { AlbumDetailPage } from './pages/AlbumDetailPage';
@@ -18,21 +20,40 @@ import { createAppTheme, defaultTheme } from './theme';
 const theme = createAppTheme(defaultTheme);
 
 function App() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
         <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-          <Navigation />
+          <AppBar
+            position="fixed"
+            elevation={0}
+            sx={{ display: { md: 'none' }, bgcolor: 'sidebar' }}
+          >
+            <Toolbar>
+              <IconButton color="inherit" edge="start" aria-label="Open menu" onClick={() => setMobileOpen(true)}>
+                <Menu />
+              </IconButton>
+              <Typography variant="h6" component="div" sx={{ ml: 1 }}>
+                Chinook
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <Navigation mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
           <Box
             component="main"
             sx={{
               flexGrow: 1,
-              p: 3,
-              width: { sm: `calc(100% - 240px)` },
+              minWidth: 0,
+              px: { xs: 2, sm: 4 },
+              pt: { xs: 10, md: 5 },
+              pb: 5,
+              width: { md: `calc(100% - ${drawerWidth}px)` },
             }}
           >
-            <Container maxWidth="xl">
+            <Container maxWidth="xl" disableGutters>
               <Routes>
                 <Route path="/" element={<Navigate to="/artists" replace />} />
                 <Route path="/artists" element={<ArtistsPage />} />

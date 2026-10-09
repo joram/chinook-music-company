@@ -31,18 +31,19 @@ export const defaultTheme: ThemeConfig = {
   name: 'default',
   mode: 'light',
   colors: {
-    primary: '#1976d2',
-    secondary: '#dc004e',
-    background: '#ffffff',
-    surface: '#f5f5f5',
+    primary: '#2F4BD1', // cobalt
+    secondary: '#E2A417', // record-label mustard
+    background: '#EDEFF3',
+    surface: '#FFFFFF',
+    sidebar: '#16203A', // deep sleeve navy
     text: {
-      primary: '#000000',
-      secondary: '#666666',
+      primary: '#18202F',
+      secondary: '#5B6475',
     },
-    error: '#d32f2f',
-    warning: '#ed6c02',
-    info: '#0288d1',
-    success: '#2e7d32',
+    error: '#C23B3B',
+    warning: '#B86E00',
+    info: '#2F6FB0',
+    success: '#2E7D4F',
   },
 };
 
