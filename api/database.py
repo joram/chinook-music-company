@@ -1,6 +1,17 @@
 import os
+import psycopg
+from psycopg.types.bool import BoolDumper
+from psycopg.types.numeric import FloatDumper, IntDumper
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import declarative_base
+
+# Send int, float and bool parameters as text instead of psycopg's default
+# binary. The VeilStream fork proxy loses the parameter type OIDs, so the
+# server infers the type from the query instead: a 2-byte binary int2 bound
+# to "$2::INTEGER" is read as a 4-byte int4 and fails with "insufficient
+# data left in message". Text values parse correctly as any inferred type.
+for py_type, dumper in ((int, IntDumper), (float, FloatDumper), (bool, BoolDumper)):
+    psycopg.adapters.register_dumper(py_type, dumper)
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
